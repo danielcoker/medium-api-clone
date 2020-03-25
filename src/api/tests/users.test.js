@@ -18,7 +18,7 @@ describe('User Registration Test', () => {
       confirmPassword: 'Password321'
     });
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(201);
     expect(response.body.success).toBe(true);
     expect(response.body.data.email).toBe('john@gmail.com');
 

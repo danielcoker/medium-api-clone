@@ -13,14 +13,11 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-app.use(
-  (req, res, next) => {
-    const reqId = uuid();
-    res.locals.log = log.child({ reqId });
-    next();
-  }
-  // (req, res, next) => logMiddleware(res.locals.log)(req, res, next)
-);
+app.use((req, res, next) => {
+  const reqId = uuid();
+  res.locals.log = log.child({ reqId });
+  next();
+});
 
 // Enabling CORS for browser clients
 app.all('*', (req, res, next) => {

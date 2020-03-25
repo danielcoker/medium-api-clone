@@ -2,7 +2,7 @@ import User from '../models/User';
 import catchControllerError from './helpers/catchControllerError';
 import invalidRequest from './helpers/invalidRequest';
 import validate from '../validations/validate';
-import UserService from '../services/UserService';
+import UserService from '../services/users.service';
 import * as schemas from '../validations/schemas/user';
 
 /**
@@ -11,17 +11,13 @@ import * as schemas from '../validations/schemas/user';
  */
 const register = catchControllerError('Register', async (req, res, next) => {
   const requestData = validate(schemas.createUser, req.body);
-  if (requestData.error) {
+  if (requestData.error)
     return invalidRequest(res, { errors: requestData.error });
-  }
 
   const { log } = res.locals;
 
-  const user = await UserService.createUser(requestData, log);
+  const user = await UserService.createUser(requestData);
 
-  log.debug(
-    'CreateUser service executed without error, sending back a success response.'
-  );
   res.status(201).json({ success: true, data: user });
 });
 
@@ -30,16 +26,12 @@ const register = catchControllerError('Register', async (req, res, next) => {
  * @access Public
  */
 const login = catchControllerError('Login', async (req, res, next) => {
-  const { log } = res.locals;
   const requestData = validate(schemas.login, req.body);
   if (requestData.error)
     return invalidRequest(res, { errors: requestData.error });
 
-  const token = await UserService.login(requestData, log);
+  const token = await UserService.login(requestData);
 
-  log.debug(
-    'Login service executed without error, sending back a success response.'
-  );
   res.status(200).json({
     success: true,
     message: 'User logged in successfully.',
