@@ -11,10 +11,15 @@ import ServiceError from './helpers/ServiceError';
 const createUser = async data => {
   const { name, email, password, username } = data;
 
-  const existingUser = await User.findOne({ email });
+  let existingUser = await User.findOne({ email });
 
   if (existingUser)
     throw new ServiceError('User with this email already exist.', 400);
+
+  existingUser = await User.findOne({ username });
+
+  if (existingUser)
+    throw new ServiceError('User with this username already exist.', 400);
 
   const user = await User.create({
     name,
