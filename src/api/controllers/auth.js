@@ -3,7 +3,7 @@ import catchControllerError from './helpers/catchControllerError';
 import invalidRequest from './helpers/invalidRequest';
 import validate from '../validations/validate';
 import UserService from '../services/users.service';
-import * as schemas from '../validations/schemas/user';
+import * as schemas from '../validations/schemas/user.schema';
 
 /**
  * @desc Register user.
@@ -12,13 +12,20 @@ import * as schemas from '../validations/schemas/user';
 const register = catchControllerError('Register', async (req, res, next) => {
   const requestData = validate(schemas.createUser, req.body);
   if (requestData.error)
-    return invalidRequest(res, { errors: requestData.error });
+    return invalidRequest(res, {
+      message: 'Validation Failed.',
+      errors: requestData.error
+    });
 
   const { log } = res.locals;
 
   const user = await UserService.createUser(requestData);
 
-  res.status(201).json({ success: true, data: user });
+  res.status(201).json({
+    success: true,
+    message: 'User registered successfully.',
+    data: user
+  });
 });
 
 /**
@@ -28,7 +35,10 @@ const register = catchControllerError('Register', async (req, res, next) => {
 const login = catchControllerError('Login', async (req, res, next) => {
   const requestData = validate(schemas.login, req.body);
   if (requestData.error)
-    return invalidRequest(res, { errors: requestData.error });
+    return invalidRequest(res, {
+      message: 'Validation Failed.',
+      errors: requestData.error
+    });
 
   const token = await UserService.login(requestData);
 
