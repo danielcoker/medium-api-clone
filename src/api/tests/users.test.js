@@ -13,27 +13,46 @@ describe('User Registration Test', () => {
     const response = await request.post('/api/v1/auth/register').send({
       name: 'John Doe',
       email: 'john@gmail.com',
+      username: 'johndoe',
       password: 'Password321',
       confirmPassword: 'Password321'
     });
 
     expect(response.status).toBe(201);
-    expect(response.body.success).toBe(true);
+    expect(response.body.success).toBeTruthy();
     expect(response.body.data.email).toBe('john@gmail.com');
 
     done();
   });
 
-  it('returns error for same email address during registration', async done => {
+  it('returns error for same email address or username during registration', async done => {
     const response = await request.post('/api/v1/auth/register').send({
       name: 'John Doe',
       email: 'john@gmail.com',
+      username: 'johndoe1',
       password: 'Password321',
       confirmPassword: 'Password321'
     });
 
     expect(response.status).toBe(400);
-    expect(response.body.success).toBe(false);
+    expect(response.body.success).toBeFalsy();
+    expect(response.body.message).toMatch(/email already exist./);
+
+    done();
+  });
+
+  it('returns error for same username during registration', async done => {
+    const response = await request.post('/api/v1/auth/register').send({
+      name: 'John Doe',
+      email: 'john1@gmail.com',
+      username: 'johndoe',
+      password: 'Password321',
+      confirmPassword: 'Password321'
+    });
+
+    expect(response.status).toBe(400);
+    expect(response.body.success).toBeFalsy();
+    expect(response.body.message).toMatch(/username already exist/);
 
     done();
   });
@@ -42,7 +61,7 @@ describe('User Registration Test', () => {
     const response = await request.post('/api/v1/auth/register').send({});
 
     expect(response.status).toBe(400);
-    expect(response.body.success).toBe(false);
+    expect(response.body.success).toBeFalsy();
 
     done();
   });
@@ -57,6 +76,7 @@ describe('User Login Test', () => {
     const newUser = await request.post('/api/v1/auth/register').send({
       name: 'John Doe',
       email: 'john@gmail.com',
+      username: 'johndoe',
       password: 'Password321',
       confirmPassword: 'Password321'
     });
@@ -67,7 +87,7 @@ describe('User Login Test', () => {
     });
 
     expect(response.status).toBe(200);
-    expect(response.body.success).toBe(true);
+    expect(response.body.success).toBeTruthy();
     expect(response.body.data.token).toBeDefined();
 
     done();
@@ -77,6 +97,7 @@ describe('User Login Test', () => {
     const newUser = await request.post('/api/v1/auth/register').send({
       name: 'John Doe',
       email: 'john@gmail.com',
+      username: 'johndoe',
       password: 'Password321',
       confirmPassword: 'Password321'
     });
@@ -84,7 +105,7 @@ describe('User Login Test', () => {
     const response = await request.post('/api/v1/auth/login').send({});
 
     expect(response.status).toBe(400);
-    expect(response.body.success).toBe(false);
+    expect(response.body.success).toBeFalsy();
 
     done();
   });
@@ -96,7 +117,7 @@ describe('User Login Test', () => {
     });
 
     expect(response.status).toBe(401);
-    expect(response.body.success).toBe(false);
+    expect(response.body.success).toBeFalsy();
 
     done();
   });
@@ -108,7 +129,7 @@ describe('User Login Test', () => {
     });
 
     expect(response.status).toBe(401);
-    expect(response.body.success).toBe(false);
+    expect(response.body.success).toBeFalsy();
 
     done();
   });
