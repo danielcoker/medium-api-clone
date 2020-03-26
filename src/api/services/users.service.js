@@ -9,7 +9,7 @@ import ServiceError from './helpers/ServiceError';
  * @throws {Error} Any error that prevents the service from executing.
  */
 const createUser = async data => {
-  const { name, email, password } = data;
+  const { name, email, password, username } = data;
 
   const existingUser = await User.findOne({ email });
 
@@ -19,6 +19,7 @@ const createUser = async data => {
   const user = await User.create({
     name,
     email,
+    username,
     password
   });
 
@@ -51,7 +52,8 @@ const formatUserData = user =>
     JSON.stringify({
       _id: user._id,
       name: user.name,
-      email: user.email
+      email: user.email,
+      username: user.username
     })
   );
 
