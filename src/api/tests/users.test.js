@@ -1,7 +1,6 @@
 import app from '../../config/app';
 import supertest from 'supertest';
 import dbHandler from './helpers/dbHandler';
-import User from '../models/User';
 
 const request = supertest(app);
 
