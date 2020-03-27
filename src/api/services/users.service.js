@@ -1,4 +1,5 @@
 import User from '../models/User';
+import Profile from '../models/Profile';
 import ServiceError from './helpers/ServiceError';
 
 /**
@@ -48,6 +49,26 @@ const login = async data => {
 };
 
 /**
+ * @desc Service function that updates user's profile..
+ * @param {object} data User data from controller.
+ * @param {object} user Curent logged in user.
+ * @returns {object} Profile object.
+ * @throws {Error} Any error that prevents the service from executing.
+ */
+const updateProfile = async (data, user) => {
+  let profile = await Profile.findOne({ user: user._id });
+
+  if (!profile) throw new ServiceError('Cannot find user profile', 401);
+
+  profile = Object.assign(profile, data);
+  profile = profile.save();
+
+  profile = await Profile.findOne({ user: user._id }).populate('user');
+
+  return profile;
+};
+
+/**
  * @desc Format the user data to be returned to client.
  * @param {object} user The raw user data gotten from the database.
  * @returns {object} The formatted user data.
@@ -64,5 +85,6 @@ const formatUserData = user =>
 
 export default {
   createUser,
-  login
+  login,
+  updateProfile
 };
