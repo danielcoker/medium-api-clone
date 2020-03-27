@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import Profile from './Profile';
 
 const { Schema } = mongoose;
 
@@ -29,6 +30,13 @@ UserSchema.pre('save', async function(next) {
 
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
+});
+
+/**
+ * @desc Create user profile after registration.
+ */
+UserSchema.post('save', async function(next) {
+  const userProfile = await Profile.create({ user: this._id });
 });
 
 /**
