@@ -23,7 +23,7 @@ const updateProfile = catchControllerError(
 
     res.status(200).json({
       success: true,
-      message: 'Profile update successfully.',
+      message: 'Profile updated successfully.',
       data: profile
     });
   }
