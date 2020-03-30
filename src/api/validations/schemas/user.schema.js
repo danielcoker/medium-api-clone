@@ -36,9 +36,15 @@ const createUser = Joi.object({
   })
 });
 
+const updateUser = Joi.object({
+  name: commonUserSchema.name.required(),
+  email: commonUserSchema.email.required(),
+  username: commonUserSchema.username.required()
+});
+
 const login = Joi.object({
   email: commonUserSchema.email.required(),
   password: commonUserSchema.password.required()
 });
 
-export { createUser, login };
+export { createUser, updateUser, login };

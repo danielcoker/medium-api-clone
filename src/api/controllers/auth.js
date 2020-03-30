@@ -51,4 +51,26 @@ const login = catchControllerError('Login', async (req, res, next) => {
   });
 });
 
-export default { register, login };
+/**
+ * @desc Update logged in user.
+ * @access Private
+ */
+const updateUser = catchControllerError('UpdateUser', async (req, res) => {
+  const requestData = validate(schemas.updateUser, req.body);
+
+  if (requestData.error)
+    return invalidRequest(ers, {
+      message: 'Validation Failed.',
+      errors: requestData.error
+    });
+
+  const user = await UserService.updateUser(requestData, req.user);
+
+  res.status(200).json({
+    success: true,
+    message: 'Updated user details successfully.',
+    data: { user }
+  });
+});
+
+export default { register, login, updateUser };

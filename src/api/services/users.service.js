@@ -50,6 +50,30 @@ const login = async data => {
 };
 
 /**
+ * @desc Update user details.
+ * @param {object} data User data from controller.
+ * @param {object} user Current logged in user.
+ * @returns {object} User object
+ * @throws {Error} Any error that prevents the service from executing.
+ */
+const updateUser = async (data, user) => {
+  let existingUser = await User.findById(user._id);
+
+  console.log(existingUser);
+
+  if (!existingUser) throw new ServiceError('User does not exist.', 401);
+
+  console.log('Working');
+
+  user = await User.findByIdAndUpdate(user._id, data, {
+    new: true,
+    runValidators: true
+  });
+
+  return user;
+};
+
+/**
  * @desc Service function that updates user's profile..
  * @param {object} data User data from controller.
  * @param {object} user Curent logged in user.
@@ -138,6 +162,7 @@ const formatUserData = user =>
 export default {
   createUser,
   login,
+  updateUser,
   updateProfile,
   updateProfileImage,
   getProfile
