@@ -3,3 +3,4 @@ build/
 coverage/
 devNotes.txt
 .env
+uploads/
