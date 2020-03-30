@@ -4,7 +4,10 @@ import { protect } from '../middlewares/auth';
 
 const router = express.Router();
 
-router.route('/:username').put(protect, controllers.profile.updateProfile);
+router
+  .route('/:username')
+  .get(controllers.profile.getProfile)
+  .put(protect, controllers.profile.updateProfile);
 
 router
   .route('/:username/image')

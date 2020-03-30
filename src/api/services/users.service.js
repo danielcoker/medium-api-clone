@@ -103,6 +103,24 @@ const updateProfileImage = async (data, user) => {
 };
 
 /**
+ * @desc Get user.
+ * @param {object} user Curent logged in user. Null by default.
+ * @returns {object} Profile object.
+ * @throws {Error} Any error that prevents the service from executing.
+ */
+const getProfile = async username => {
+  const user = await User.findOne({ username });
+
+  if (!user) throw new ServiceError('Cannot find user with this username', 401);
+
+  const profile = await Profile.findOne({ user: user._id }).populate('user');
+
+  if (!profile) throw new ServiceError('Cannot find user profile', 401);
+
+  return profile;
+};
+
+/**
  * @desc Format the user data to be returned to client.
  * @param {object} user The raw user data gotten from the database.
  * @returns {object} The formatted user data.
@@ -121,5 +139,6 @@ export default {
   createUser,
   login,
   updateProfile,
-  updateProfileImage
+  updateProfileImage,
+  getProfile
 };
