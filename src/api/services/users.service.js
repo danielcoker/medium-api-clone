@@ -62,7 +62,7 @@ const updateProfile = async (data, user) => {
   if (!profile) throw new ServiceError('Cannot find user profile', 401);
 
   profile = Object.assign(profile, data);
-  profile = profile.save();
+  profile = await profile.save();
 
   profile = await Profile.findOne({ user: user._id }).populate('user');
 
