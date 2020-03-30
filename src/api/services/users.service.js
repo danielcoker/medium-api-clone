@@ -1,3 +1,4 @@
+import path from 'path';
 import User from '../models/User';
 import Profile from '../models/Profile';
 import ServiceError from './helpers/ServiceError';
@@ -69,6 +70,39 @@ const updateProfile = async (data, user) => {
 };
 
 /**
+ * @desc Update profile image
+ * @param {object} data User data from controller.
+ * @param {object} user Curent logged in user.
+ * @returns {object} Profile object.
+ * @throws {Error} Any error that prevents the service from executing.
+ */
+const updateProfileImage = async (data, user) => {
+  let profile = await Profile.findOne({ user: user._id });
+
+  if (!profile) throw new ServiceError('Cannot find user profile', 401);
+
+  const { file } = data;
+
+  // @desc Create custom file name.
+  file.name = `photo_${profile._id}${path.parse(file.name).ext}`;
+
+  const filePath = `${process.env.FILE_UPLOAD_PATH}/profile_images/${file.name}`;
+
+  file.mv(filePath, async err => {
+    if (err) {
+      console.log(err);
+      return next(new ErrorResponse(`Problem with file upload.`, 400));
+    }
+  });
+
+  profile.image = file.name;
+
+  profile.save();
+
+  return filePath;
+};
+
+/**
  * @desc Format the user data to be returned to client.
  * @param {object} user The raw user data gotten from the database.
  * @returns {object} The formatted user data.
@@ -86,5 +120,6 @@ const formatUserData = user =>
 export default {
   createUser,
   login,
-  updateProfile
+  updateProfile,
+  updateProfileImage
 };
