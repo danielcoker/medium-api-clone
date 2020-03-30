@@ -9,31 +9,11 @@ import {
 const request = supertest(app);
 
 describe('Profile Test', () => {
-  // beforeEach(async () => await dbHandler.connect());
-
-  // afterEach(async () => await dbHandler.close());
-
   beforeEach(connectMongoose);
 
   beforeEach(clearDatabase);
 
   afterEach(disconnectMongoose);
-
-  // it('creates profile after registration', async done => {
-  //   const response = await request.post('/api/v1/auth/register').send({
-  //     name: 'John Doe',
-  //     email: 'john@gmail.com',
-  //     username: 'johndoe',
-  //     password: 'Password321',
-  //     confirmPassword: 'Password321'
-  //   });
-
-  //   expect(response.status).toBe(201);
-  //   expect(response.body.success).toBeTruthy();
-  //   expect(response.body.data.email).toBe('john@gmail.com');
-
-  //   done();
-  // });
 
   test('updates logged in user profile', async done => {
     const newUser = await request.post('/api/v1/auth/register').send({
