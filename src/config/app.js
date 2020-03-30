@@ -1,6 +1,7 @@
 import express from 'express';
 import uuid from 'uuid/v4';
 import morgan from 'morgan';
+import fileupload from 'express-fileupload';
 import { log, logMiddleware } from '../api/utils/logger';
 import routes from '../api/routes';
 
@@ -12,6 +13,8 @@ app.use(express.urlencoded({ extended: false }));
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
+app.use(fileupload());
 
 app.use((req, res, next) => {
   const reqId = uuid();
