@@ -4,7 +4,7 @@ import { protect } from '../middlewares/auth';
 
 const router = express.Router();
 
-router.route('/:username').post(protect, controllers.profile.updateProfile);
+router.route('/:username').put(protect, controllers.profile.updateProfile);
 
 router
   .route('/:username/image')
