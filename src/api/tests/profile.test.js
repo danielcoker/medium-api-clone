@@ -1,39 +1,59 @@
 import app from '../../config/app';
 import supertest from 'supertest';
-import dbHandler from './helpers/dbHandler';
+import {
+  connectMongoose,
+  clearDatabase,
+  disconnectMongoose
+} from './helpers/dbHandler';
 
 const request = supertest(app);
 
 describe('Profile Test', () => {
-  beforeAll(async () => await dbHandler.connect());
+  // beforeEach(async () => await dbHandler.connect());
 
-  afterAll(async () => await dbHandler.close());
+  // afterEach(async () => await dbHandler.close());
 
-  test('creates profile after registration', async done => {
-    const response = await request.post('/api/v1/auth/register').send({
-      name: 'John Doe',
-      email: 'john@gmail.com',
-      username: 'johndoe',
-      password: 'Password321',
-      confirmPassword: 'Password321'
-    });
+  beforeEach(connectMongoose);
 
-    expect(response.status).toBe(201);
-    expect(response.body.success).toBeTruthy();
-    expect(response.body.data.email).toBe('john@gmail.com');
+  beforeEach(clearDatabase);
 
-    done();
-  });
+  afterEach(disconnectMongoose);
+
+  // it('creates profile after registration', async done => {
+  //   const response = await request.post('/api/v1/auth/register').send({
+  //     name: 'John Doe',
+  //     email: 'john@gmail.com',
+  //     username: 'johndoe',
+  //     password: 'Password321',
+  //     confirmPassword: 'Password321'
+  //   });
+
+  //   expect(response.status).toBe(201);
+  //   expect(response.body.success).toBeTruthy();
+  //   expect(response.body.data.email).toBe('john@gmail.com');
+
+  //   done();
+  // });
 
   test('updates logged in user profile', async done => {
-    const loggedInUserResponse = await request.post('/api/v1/auth/login').send({
-      email: 'john@gmail.com',
-      password: 'Password321'
+    const newUser = await request.post('/api/v1/auth/register').send({
+      name: 'New User',
+      email: 'newuser@gmail.com',
+      username: 'newuser',
+      password: 'newuserpassword',
+      confirmPassword: 'newuserpassword'
     });
 
+    const loggedInUserResponse = await request.post('/api/v1/auth/login').send({
+      email: 'newuser@gmail.com',
+      password: 'newuserpassword'
+    });
+
+    const token = loggedInUserResponse.body.data.token;
+
     const updateProfileResponse = await request
-      .post('/api/v1/profiles/johndoe')
-      .set('Authorization', `Bearer ${loggedInUserResponse.body.data.token}`)
+      .post('/api/v1/profiles/newuser')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         bio: 'I am John Doe'
       });
