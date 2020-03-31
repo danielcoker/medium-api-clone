@@ -32,7 +32,7 @@ describe('Profile Test', () => {
     const token = loggedInUserResponse.body.data.token;
 
     const updateProfileResponse = await request
-      .put('/api/v1/profiles/newuser')
+      .put('/api/v1/profiles')
       .set('Authorization', `Bearer ${token}`)
       .send({
         bio: 'I am John Doe'
@@ -64,7 +64,7 @@ describe('Profile Test', () => {
       '/Users/admin/Documents/Node Projects/medium-api-clone/src/api/tests/helpers/sample_image.jpeg';
 
     const updateProfileImageResponse = await request
-      .put('/api/v1/profiles/newuser/image')
+      .put('/api/v1/profiles/image')
       .set('Authorization', `Bearer ${token}`)
       .attach('file', sampleImagePath);
 
