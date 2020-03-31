@@ -73,6 +73,10 @@ const updateUser = catchControllerError('UpdateUser', async (req, res) => {
   });
 });
 
+/**
+ * @desc Update logged in user password.
+ * @access Private
+ */
 const updatePassword = catchControllerError(
   'UpdatePassword',
   async (req, res) => {
