@@ -73,4 +73,25 @@ const updateUser = catchControllerError('UpdateUser', async (req, res) => {
   });
 });
 
-export default { register, login, updateUser };
+const updatePassword = catchControllerError(
+  'UpdatePassword',
+  async (req, res) => {
+    const requestData = validate(schemas.updatePassword, req.body);
+
+    if (requestData.error)
+      return invalidRequest(res, {
+        message: 'Validation Failed.',
+        errors: requestData.error
+      });
+
+    const user = await UserService.updatePassword(requestData, req.user);
+
+    res.status(200).json({
+      success: true,
+      message: 'Updated password successfully.',
+      data: { user }
+    });
+  }
+);
+
+export default { register, login, updateUser, updatePassword };
