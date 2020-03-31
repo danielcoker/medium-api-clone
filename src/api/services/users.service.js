@@ -32,6 +32,8 @@ const createUser = async data => {
     password
   });
 
+  await user.createProfile();
+
   return formatUserData(user);
 };
 
