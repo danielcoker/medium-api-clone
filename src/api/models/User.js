@@ -42,9 +42,9 @@ UserSchema.pre('save', async function(next) {
 /**
  * @desc Create user profile after registration.
  */
-UserSchema.post('save', async function(next) {
+UserSchema.methods.createProfile = async function() {
   const userProfile = await Profile.create({ user: this._id });
-});
+};
 
 /**
  * @desc Sign user token.
