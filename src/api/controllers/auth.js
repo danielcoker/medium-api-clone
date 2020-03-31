@@ -98,4 +98,64 @@ const updatePassword = catchControllerError(
   }
 );
 
-export default { register, login, updateUser, updatePassword };
+/**
+ * @desc Request reset password token.
+ * Token will be sent to user's email.
+ * @access Public
+ */
+const forgotPassword = catchControllerError(
+  'ResetPassword',
+  async (req, res) => {
+    const requestData = validate(schemas.forgotPassword, req.body);
+
+    if (requestData.error)
+      return invalidRequest(res, {
+        message: 'Validation Failed.',
+        errors: requestData.error
+      });
+
+    await UserService.forgotPassword(requestData, req);
+
+    res.status(200).json({
+      success: true,
+      message: 'A reset link has been sent to your mail.',
+      data: {}
+    });
+  }
+);
+
+/**
+ * @desc Reset password.
+ * @access Public
+ */
+const resetPassword = catchControllerError(
+  'ResetPassword',
+  async (req, res) => {
+    const requestData = validate(schemas.resetPassword, req.body);
+
+    if (requestData.error)
+      return invalidRequest(res, {
+        message: 'Validation Failed.',
+        errors: requestData.error
+      });
+
+    const token = req.params.token;
+
+    await UserService.resetPassword(requestData, token);
+
+    res.status(200).json({
+      success: true,
+      message: 'Password changed successfully.',
+      data: {}
+    });
+  }
+);
+
+export default {
+  register,
+  login,
+  updateUser,
+  updatePassword,
+  forgotPassword,
+  resetPassword
+};

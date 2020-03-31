@@ -55,4 +55,22 @@ const login = Joi.object({
   password: commonUserSchema.password.required()
 });
 
-export { createUser, updateUser, updatePassword, login };
+const forgotPassword = Joi.object({
+  email: commonUserSchema.email.required()
+});
+
+const resetPassword = Joi.object({
+  password: commonUserSchema.password.required(),
+  confirmPassword: commonUserSchema.confirmPassword.required().messages({
+    'any.required': 'Confirm password is required'
+  })
+});
+
+export {
+  createUser,
+  updateUser,
+  updatePassword,
+  login,
+  forgotPassword,
+  resetPassword
+};
