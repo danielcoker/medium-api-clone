@@ -59,11 +59,7 @@ const login = async data => {
 const updateUser = async (data, user) => {
   let existingUser = await User.findById(user._id);
 
-  console.log(existingUser);
-
   if (!existingUser) throw new ServiceError('User does not exist.', 401);
-
-  console.log('Working');
 
   user = await User.findByIdAndUpdate(user._id, data, {
     new: true,
