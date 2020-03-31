@@ -87,4 +87,42 @@ describe('User Registration Test', () => {
 
     done();
   });
+
+  test('updates user details', async done => {
+    const newUser = await request.post('/api/v1/auth/register').send({
+      name: 'New User',
+      email: 'newuser@gmail.com',
+      username: 'newuser',
+      password: 'newuserpassword',
+      confirmPassword: 'newuserpassword'
+    });
+
+    const loggedInUser = await request.post('/api/v1/auth/login').send({
+      email: 'newuser@gmail.com',
+      password: 'newuserpassword'
+    });
+
+    const token = loggedInUser.body.data.token;
+
+    const updateUserDetailsResponse = await request
+      .put('/api/v1/auth/user')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        name: 'Updated name',
+        email: 'updatedemail@gmail.com',
+        username: 'updatedusername'
+      });
+
+    expect(updateUserDetailsResponse.status).toBe(200);
+    expect(updateUserDetailsResponse.body.success).toBeTruthy();
+    expect(updateUserDetailsResponse.body.data.user.name).toBe('Updated name');
+    expect(updateUserDetailsResponse.body.data.user.email).toBe(
+      'updatedemail@gmail.com'
+    );
+    expect(updateUserDetailsResponse.body.data.user.username).toBe(
+      'updatedusername'
+    );
+
+    done();
+  });
 });
