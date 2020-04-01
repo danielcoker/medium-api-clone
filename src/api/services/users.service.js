@@ -37,6 +37,12 @@ const createUser = async data => {
   return formatUserData(user);
 };
 
+/**
+ * @desc Log user in using email and password.
+ * @param {object} data User details from controller.
+ * @returns {string} JWT authentication token.
+ * @throws {Error} Any error that prevents the service from running.
+ */
 const login = async data => {
   const { email, password } = data;
 
