@@ -71,8 +71,8 @@ describe('User Password Update Tests', () => {
         confirmPassword: 'newpassword'
       });
 
-    expect(updateUserPasswordResponse.status).toBe(200);
-    expect(updateUserPasswordResponse.body.success).toBeTruthy();
+    expect(updateUserPasswordResponse.status).toBe(400);
+    expect(updateUserPasswordResponse.body.success).toBeFalsy();
 
     done();
   });
