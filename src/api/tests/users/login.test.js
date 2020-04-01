@@ -1,10 +1,10 @@
-import app from '../../config/app';
+import app from '../../../config/app';
 import supertest from 'supertest';
 import {
   connectMongoose,
   clearDatabase,
   disconnectMongoose
-} from './helpers/dbHandler';
+} from '../helpers/dbHandler';
 
 const request = supertest(app);
 
@@ -37,8 +37,6 @@ describe('User Login Test', () => {
   });
 
   test('returns error if required fields are empty', async done => {
-    const newUser = await request.post('/api/v1/auth/register').send({});
-
     const response = await request.post('/api/v1/auth/login').send({});
 
     expect(response.status).toBe(400);

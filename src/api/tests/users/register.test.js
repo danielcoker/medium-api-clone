@@ -1,10 +1,10 @@
-import app from '../../config/app';
+import app from '../../../config/app';
 import supertest from 'supertest';
 import {
   connectMongoose,
   clearDatabase,
   disconnectMongoose
-} from './helpers/dbHandler';
+} from '../helpers/dbHandler';
 
 const request = supertest(app);
 
@@ -122,68 +122,6 @@ describe('User Registration Test', () => {
     expect(updateUserDetailsResponse.body.data.user.username).toBe(
       'updatedusername'
     );
-
-    done();
-  });
-
-  test('updates user password', async done => {
-    const newUser = await request.post('/api/v1/auth/register').send({
-      name: 'New User',
-      email: 'newuser@gmail.com',
-      username: 'newuser',
-      password: 'olduserpassword',
-      confirmPassword: 'olduserpassword'
-    });
-
-    const loggedInUser = await request.post('/api/v1/auth/login').send({
-      email: 'newuser@gmail.com',
-      password: 'olduserpassword'
-    });
-
-    const token = loggedInUser.body.data.token;
-
-    const updateUserPasswordResponse = await request
-      .put('/api/v1/auth/user/password')
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        currentPassword: 'olduserpassword',
-        password: 'newpassword',
-        confirmPassword: 'newpassword'
-      });
-
-    expect(updateUserPasswordResponse.status).toBe(200);
-    expect(updateUserPasswordResponse.body.success).toBeTruthy();
-
-    done();
-  });
-
-  test('returns error if current password does not match record', async done => {
-    const newUser = await request.post('/api/v1/auth/register').send({
-      name: 'New User',
-      email: 'newuser@gmail.com',
-      username: 'newuser',
-      password: 'olduserpassword',
-      confirmPassword: 'olduserpassword'
-    });
-
-    const loggedInUser = await request.post('/api/v1/auth/login').send({
-      email: 'newuser@gmail.com',
-      password: 'olduserpassword'
-    });
-
-    const token = loggedInUser.body.data.token;
-
-    const updateUserPasswordResponse = await request
-      .put('/api/v1/auth/user/password')
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        currentPassword: 'olduserpassword',
-        password: 'newpassword',
-        confirmPassword: 'newpassword'
-      });
-
-    expect(updateUserPasswordResponse.status).toBe(200);
-    expect(updateUserPasswordResponse.body.success).toBeTruthy();
 
     done();
   });

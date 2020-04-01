@@ -1,10 +1,10 @@
-import app from '../../config/app';
+import app from '../../../config/app';
 import supertest from 'supertest';
 import {
   connectMongoose,
   clearDatabase,
   disconnectMongoose
-} from './helpers/dbHandler';
+} from '../helpers/dbHandler';
 
 const request = supertest(app);
 
