@@ -248,6 +248,52 @@ const resetPassword = async (data, token) => {
 };
 
 /**
+ * @desc Follows a user
+ * @param {object} username Username of follower.
+ * @param {object} user User to be followed.
+ * @returns {object} Followed user.
+ * @throws {Error} Any error that prevents the service from executing.
+ */
+const followUser = async (user, username) => {
+  const leader = await User.findOne({ username });
+
+  if (user._id.equals(leader._id))
+    throw new ServiceError('You cannot follow yourself.', 400);
+
+  if (!leader)
+    throw new ServiceError('User with this username cannot be found.', 400);
+
+  const isFollowing = await user.isFollowing(leader);
+
+  if (!isFollowing) await user.followUser(leader);
+
+  return leader;
+};
+
+/**
+ * @desc Unfollows a user
+ * @param {object} username Username of follower.
+ * @param {object} user User to be unfollowed.
+ * @returns {boolean} True if unfollowing is successful.
+ * @throws {Error} Any error that prevents the service from executing.
+ */
+const unfollowUser = async (user, username) => {
+  const leader = await User.findOne({ username });
+
+  if (user._id.equals(leader._id))
+    throw new ServiceError('You cannot unfollow yourself.', 400);
+
+  if (!leader)
+    throw new ServiceError('User with this username cannot be found.', 400);
+
+  const isFollowing = await user.isFollowing(leader);
+
+  if (isFollowing) await user.unfollowUser(leader);
+
+  return leader;
+};
+
+/**
  * @desc Format the user data to be returned to client.
  * @param {object} user The raw user data gotten from the database.
  * @returns {object} The formatted user data.
@@ -271,5 +317,7 @@ export default {
   updateProfileImage,
   getProfile,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  followUser,
+  unfollowUser
 };

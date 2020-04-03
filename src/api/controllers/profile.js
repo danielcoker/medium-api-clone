@@ -93,4 +93,42 @@ const updateProfileImage = catchControllerError(
   }
 );
 
-export default { getProfile, updateProfile, updateProfileImage };
+/**
+ * @desc Follow a user.
+ * @access Private
+ */
+const followUser = catchControllerError('Follow User', async (req, res) => {
+  const username = req.params.username;
+
+  const leader = await UserService.followUser(req.user, username);
+
+  res.status(200).json({
+    success: true,
+    message: 'User followed successfully.',
+    data: leader
+  });
+});
+
+/**
+ * @desc Unfollow a user.
+ * @access Private
+ */
+const unfollowUser = catchControllerError('Unfollow User', async (req, res) => {
+  const username = req.params.username;
+
+  const leader = await UserService.unfollowUser(req.user, username);
+
+  res.status(200).json({
+    success: true,
+    message: 'User unfollowed successfully.',
+    data: leader
+  });
+});
+
+export default {
+  getProfile,
+  updateProfile,
+  updateProfileImage,
+  followUser,
+  unfollowUser
+};

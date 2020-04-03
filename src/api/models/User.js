@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import Profile from './Profile';
+import Follower from './Follower';
 
 const { Schema } = mongoose;
 
@@ -82,6 +83,40 @@ UserSchema.methods.getResetPasswordToken = function() {
   this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
 
   return resetToken;
+};
+
+/**
+ * @desc Follow user.
+ * @returns {boolean} True.
+ */
+UserSchema.methods.followUser = async function(leader) {
+  return await Follower.create({ leader: leader._id, follower: this._id });
+};
+
+/**
+ * f@desc Unfollow user.
+ * @returns {boolean} True.
+ */
+UserSchema.methods.unfollowUser = async function(leader) {
+  await Follower.findOneAndDelete({
+    $and: [{ leader: leader._id }, { follower: this._id }]
+  });
+};
+
+/**
+ * @desc Check if a user is following another user.
+ * @returns {boolean}
+ */
+UserSchema.methods.isFollowing = async function(leader) {
+  const isFollowing = await Follower.findOne({
+    $and: [{ leader: leader._id }, { follower: this._id }]
+  });
+
+  if (isFollowing) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
 const User = mongoose.model('User', UserSchema);
