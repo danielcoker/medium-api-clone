@@ -73,4 +73,74 @@ describe('Profile Test', () => {
 
     done();
   });
+
+  test('logged user can follow a user', async done => {
+    const newUser = await request.post('/api/v1/auth/register').send({
+      name: 'New User',
+      email: 'newuser@gmail.com',
+      username: 'newuser',
+      password: 'newuserpassword',
+      confirmPassword: 'newuserpassword'
+    });
+
+    const anotherUser = await request.post('/api/v1/auth/register').send({
+      name: 'New User',
+      email: 'anotheruser@gmail.com',
+      username: 'anotheruser',
+      password: 'anotheruserpassword',
+      confirmPassword: 'anotherusepassword'
+    });
+
+    const loggedInUserResponse = await request.post('/api/v1/auth/login').send({
+      email: 'newuser@gmail.com',
+      password: 'newuserpassword'
+    });
+
+    const token = loggedInUserResponse.body.data.token;
+
+    const follwoUserResponse = await request
+      .post('/api/v1/profiles/anotheruser/follow')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(follwoUserResponse.status).toBe(200);
+    expect(follwoUserResponse.body.success).toBeTruthy();
+    expect(follwoUserResponse.body.data.username).toBe('anotheruser');
+
+    done();
+  });
+
+  test('logged user can follow a user', async done => {
+    const newUser = await request.post('/api/v1/auth/register').send({
+      name: 'New User',
+      email: 'newuser@gmail.com',
+      username: 'newuser',
+      password: 'newuserpassword',
+      confirmPassword: 'newuserpassword'
+    });
+
+    const anotherUser = await request.post('/api/v1/auth/register').send({
+      name: 'New User',
+      email: 'anotheruser@gmail.com',
+      username: 'anotheruser',
+      password: 'anotheruserpassword',
+      confirmPassword: 'anotherusepassword'
+    });
+
+    const loggedInUserResponse = await request.post('/api/v1/auth/login').send({
+      email: 'newuser@gmail.com',
+      password: 'newuserpassword'
+    });
+
+    const token = loggedInUserResponse.body.data.token;
+
+    const follwoUserResponse = await request
+      .delete('/api/v1/profiles/anotheruser/follow')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(follwoUserResponse.status).toBe(200);
+    expect(follwoUserResponse.body.success).toBeTruthy();
+    expect(follwoUserResponse.body.data.username).toBe('anotheruser');
+
+    done();
+  });
 });

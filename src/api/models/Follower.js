@@ -12,6 +12,10 @@ const FollowerSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User',
     required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
 });
 
