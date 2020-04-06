@@ -57,19 +57,12 @@ ArticleSchema.pre('save', async function(next) {
 });
 
 /**
- * @desc Change article slug appropiately on update.
+ * @desc Check if user is the author of an article.
+ * @returns {object} User.
  */
-// ArticleSchema.pre('updateOne', function(next) {
-//   const title = this.getUpdate().$set.title;
-
-//   if (!title) return next();
-
-//   try {
-//     this.slug = createSlug(title);
-//   } catch (error) {
-//     return next(error);
-//   }
-// });
+ArticleSchema.methods.isAuthoredBy = function(user) {
+  return this.author.equals(user);
+};
 
 /**
  * @desc Create slug from title.

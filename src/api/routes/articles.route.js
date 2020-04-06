@@ -5,5 +5,6 @@ import { protect } from '../middlewares/auth';
 const router = express.Router();
 
 router.route('/').post(protect, controllers.articles.createArticle);
+router.route('/:slug').put(protect, controllers.articles.updateArticle);
 
 export default router;

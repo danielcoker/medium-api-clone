@@ -29,4 +29,35 @@ const createArticle = catchControllerError(
   }
 );
 
-export default { createArticle };
+/**
+ * @desc Update an article.
+ * @access Private
+ */
+const updateArticle = catchControllerError(
+  'Update Article',
+  async (req, res) => {
+    const requestData = validate(schemas.createArticle, req.body);
+
+    const slug = req.params.slug;
+
+    if (requestData.error)
+      return invalidRequest(res, {
+        message: 'Validation Failed.',
+        errors: requestData.error
+      });
+
+    const article = await ArticleService.updateArticle(
+      slug,
+      requestData,
+      req.user
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Article updated successfully.',
+      data: article
+    });
+  }
+);
+
+export default { createArticle, updateArticle };
