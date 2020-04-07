@@ -60,4 +60,56 @@ describe('Get Articles Test', () => {
 
     done();
   });
+
+  test('get all articles', async done => {
+    const newUser = await request.post('/api/v1/auth/register').send({
+      name: 'New User',
+      email: 'newuser@gmail.com',
+      username: 'newuser',
+      password: 'newuserpassword',
+      confirmPassword: 'newuserpassword'
+    });
+
+    const loggedInUserResponse = await request.post('/api/v1/auth/login').send({
+      email: 'newuser@gmail.com',
+      password: 'newuserpassword'
+    });
+
+    const token = loggedInUserResponse.body.data.token;
+
+    const firstArticleResponse = await request
+      .post('/api/v1/articles')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        title: 'New Article Title',
+        description: 'New Article Description',
+        body: 'New Article Body'
+      });
+
+    const secondArticleResponse = await request
+      .post('/api/v1/articles')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        title: 'New Article Title',
+        description: 'New Article Description',
+        body: 'New Article Body'
+      });
+
+    const thirdArticleResponse = await request
+      .post('/api/v1/articles')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        title: 'New Article Title',
+        description: 'New Article Description',
+        body: 'New Article Body'
+      });
+
+    const getArticlesResponse = await request.get('/api/v1/articles');
+
+    expect(getArticlesResponse.status).toBe(200);
+    expect(getArticlesResponse.body.success).toBeTruthy();
+    expect(getArticlesResponse.body.count).toBe(3);
+
+    done();
+  });
 });
