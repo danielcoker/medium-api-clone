@@ -21,6 +21,22 @@ const getArticle = catchControllerError('Get Article', async (req, res) => {
 });
 
 /**
+ * @desc Get all articles.
+ * @access Public
+ */
+const getArticles = catchControllerError('Get Articles', async (req, res) => {
+  const { pagination, results } = await ArticleService.getArticles(req);
+
+  res.status(200).json({
+    success: true,
+    message: 'All articles.',
+    count: results.length,
+    pagination,
+    data: results
+  });
+});
+
+/**
  * @desc Create an article.
  * @access Private
  */
@@ -94,4 +110,10 @@ const deleteArticle = catchControllerError(
   }
 );
 
-export default { getArticle, createArticle, updateArticle, deleteArticle };
+export default {
+  getArticle,
+  getArticles,
+  createArticle,
+  updateArticle,
+  deleteArticle
+};

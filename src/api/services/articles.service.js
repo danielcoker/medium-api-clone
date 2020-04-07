@@ -1,4 +1,5 @@
 import Article from '../models/Article';
+import advancedResults from './helpers/advancedResults';
 import ServiceError from './helpers/ServiceError';
 
 /**
@@ -13,6 +14,16 @@ const getArticle = async slug => {
   if (!article) throw new ServiceError('Article does not exist.', 404);
 
   return article;
+};
+
+/**
+ * @desc Service to get all tasks from the database.
+ * @param {object} req Request object from controller.
+ * @returns {object} Returns pagination and results.
+ * @throws {Error} Any error that prevents the service from executing.
+ */
+const getArticles = async req => {
+  return advancedResults(req, Article, 'author');
 };
 
 /**
@@ -74,4 +85,10 @@ const deleteArticle = async (slug, user) => {
   return true;
 };
 
-export default { getArticle, createArticle, updateArticle, deleteArticle };
+export default {
+  getArticle,
+  getArticles,
+  createArticle,
+  updateArticle,
+  deleteArticle
+};
