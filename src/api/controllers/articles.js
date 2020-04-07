@@ -5,6 +5,22 @@ import ArticleService from '../services/articles.service';
 import * as schemas from '../validations/schemas/article.schema';
 
 /**
+ * @desc Get a single article.
+ * @access Public
+ */
+const getArticle = catchControllerError('Get Article', async (req, res) => {
+  const slug = req.params.slug;
+
+  const article = await ArticleService.getArticle(slug);
+
+  res.status(200).json({
+    success: true,
+    message: 'Single Article',
+    data: article
+  });
+});
+
+/**
  * @desc Create an article.
  * @access Private
  */
@@ -78,4 +94,4 @@ const deleteArticle = catchControllerError(
   }
 );
 
-export default { createArticle, updateArticle, deleteArticle };
+export default { getArticle, createArticle, updateArticle, deleteArticle };

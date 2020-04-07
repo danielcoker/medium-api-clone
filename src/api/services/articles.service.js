@@ -3,6 +3,20 @@ import ServiceError from './helpers/ServiceError';
 
 /**
  * @desc Create a new article.
+ * @param {string} slug Article slug from controller.
+ * @returns {object} Found article.
+ * @throws {Error} Any error that prevents the service from executing.
+ */
+const getArticle = async slug => {
+  const article = await Article.findOne({ slug }).populate('author');
+
+  if (!article) throw new ServiceError('Article cannot be found.', 400);
+
+  return article;
+};
+
+/**
+ * @desc Create a new article.
  * @param {object} data Article data from controller.
  * @param {user} user Loggedin user.
  * @returns {object} The new user.
@@ -60,4 +74,4 @@ const deleteArticle = async (slug, user) => {
   return true;
 };
 
-export default { createArticle, updateArticle, deleteArticle };
+export default { getArticle, createArticle, updateArticle, deleteArticle };
