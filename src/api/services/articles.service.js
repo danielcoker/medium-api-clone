@@ -19,7 +19,7 @@ const getArticle = async slug => {
  * @desc Create a new article.
  * @param {object} data Article data from controller.
  * @param {user} user Loggedin user.
- * @returns {object} The new user.
+ * @returns {object} The new article.
  * @throws {Error} Any error that prevents the service from executing.
  */
 const createArticle = async (data, user) => {
