@@ -10,7 +10,7 @@ import ServiceError from './helpers/ServiceError';
 const getArticle = async slug => {
   const article = await Article.findOne({ slug }).populate('author');
 
-  if (!article) throw new ServiceError('Article cannot be found.', 400);
+  if (!article) throw new ServiceError('Article does not exist.', 404);
 
   return article;
 };
@@ -43,7 +43,7 @@ const updateArticle = async (slug, data, user) => {
 
   let article = await Article.findOne({ slug });
 
-  if (!article) throw new ServiceError('Article does not exist', 400);
+  if (!article) throw new ServiceError('Article does not exist.', 404);
 
   if (!article.isAuthoredBy(user.id))
     throw new 'User is not authorized to update this article.'();
@@ -64,7 +64,7 @@ const updateArticle = async (slug, data, user) => {
 const deleteArticle = async (slug, user) => {
   let article = await Article.findOne({ slug });
 
-  if (!article) throw new ServiceError('Article does not exist', 400);
+  if (!article) throw new ServiceError('Article does not exist.', 404);
 
   if (!article.isAuthoredBy(user.id))
     throw new 'User is not authorized to update this article.'();
