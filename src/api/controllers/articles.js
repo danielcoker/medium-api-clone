@@ -60,4 +60,22 @@ const updateArticle = catchControllerError(
   }
 );
 
-export default { createArticle, updateArticle };
+/**
+ * @desc Delete an article.
+ * @access Private
+ */
+const deleteArticle = catchControllerError(
+  'Delete Article',
+  async (req, res) => {
+    const slug = req.params.slug;
+
+    const article = await ArticleService.deleteArticle(slug, req.user);
+
+    res.status(204).json({
+      success: true,
+      message: 'Article deleted successfully.'
+    });
+  }
+);
+
+export default { createArticle, updateArticle, deleteArticle };
