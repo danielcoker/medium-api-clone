@@ -29,6 +29,8 @@ const ArticleSchema = new Schema(
  * @desc Create article slug on save.
  */
 ArticleSchema.pre('save', async function(next) {
+  if (!this.isModified('title')) next();
+
   let slugExists = true;
 
   let slug = createSlug(this.title);
