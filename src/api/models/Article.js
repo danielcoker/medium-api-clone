@@ -1,12 +1,11 @@
 import mongoose from 'mongoose';
 import slugify from 'slugify';
-import ErrorResponse from '../utils/errorResponse';
 
 const { Schema } = mongoose;
 
 const opts = {
   toJSON: { virtuals: true },
-  timestamps: true
+  timestamps: true,
 };
 
 const ArticleSchema = new Schema(
@@ -19,8 +18,8 @@ const ArticleSchema = new Schema(
     author: {
       type: Schema.ObjectId,
       ref: 'User',
-      required: true
-    }
+      required: true,
+    },
   },
   opts
 );
@@ -28,7 +27,7 @@ const ArticleSchema = new Schema(
 /**
  * @desc Create article slug on save.
  */
-ArticleSchema.pre('save', async function(next) {
+ArticleSchema.pre('save', async function (next) {
   if (!this.isModified('title')) next();
 
   let slugExists = true;
@@ -62,14 +61,14 @@ ArticleSchema.pre('save', async function(next) {
  * @desc Check if user is the author of an article.
  * @returns {object} User.
  */
-ArticleSchema.methods.isAuthoredBy = function(user) {
+ArticleSchema.methods.isAuthoredBy = function (user) {
   return this.author.equals(user);
 };
 
 /**
  * @desc Create slug from title.
  */
-const createSlug = title => {
+const createSlug = (title) => {
   const slug = slugify(title, { lower: true });
   return slug;
 };
@@ -77,7 +76,7 @@ const createSlug = title => {
 /**
  * @desc Increment number at the end of slug.
  */
-const incrementSlugNumber = slug => {
+const incrementSlugNumber = (slug) => {
   let slugArray = slug.split('-');
   let slugNumber = parseInt(slugArray.pop(), 10);
   slugNumber++;
