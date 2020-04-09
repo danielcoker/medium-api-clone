@@ -17,8 +17,6 @@ const addComment = catchControllerError('Add Comment', async (req, res) => {
       errors: requestData.error,
     });
 
-  console.log(req.params);
-
   const slug = req.params.slug;
 
   const comment = await CommentService.addComment(slug, requestData, req.user);

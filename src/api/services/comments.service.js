@@ -14,8 +14,6 @@ import ServiceError from './helpers/ServiceError';
 const addComment = async (slug, data, user) => {
   const { body } = data;
 
-  console.log('Slug', slug);
-
   const article = await Article.findOne({ slug });
 
   if (!article) throw new ServiceError('Article does not exist.', 404);
