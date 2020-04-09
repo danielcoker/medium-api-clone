@@ -5,6 +5,22 @@ import CommentService from '../services/comments.service';
 import * as schemas from '../validations/schemas/comment.schema';
 
 /**
+ * @desc Get comments for an article.
+ * @access Public
+ */
+const getComments = catchControllerError('Get Comment', async (req, res) => {
+  const slug = req.params.slug;
+
+  const comments = await CommentService.getComments(slug);
+
+  res.status(200).json({
+    success: true,
+    message: 'Comments for this article.',
+    data: comments,
+  });
+});
+
+/**
  * @desc Add comment to an article.
  * @access Private
  */
@@ -28,4 +44,4 @@ const addComment = catchControllerError('Add Comment', async (req, res) => {
   });
 });
 
-export default { addComment };
+export default { getComments, addComment };

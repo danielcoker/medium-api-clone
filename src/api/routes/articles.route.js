@@ -4,7 +4,10 @@ import { protect } from '../middlewares/auth';
 
 const router = express.Router();
 
-router.route('/:slug/comments').post(protect, controllers.comments.addComment);
+router
+  .route('/:slug/comments')
+  .get(controllers.comments.getComments)
+  .post(protect, controllers.comments.addComment);
 
 router
   .route('/')
