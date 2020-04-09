@@ -4,6 +4,8 @@ import { protect } from '../middlewares/auth';
 
 const router = express.Router();
 
+router.route('/:slug/comments').post(protect, controllers.comments.addComment);
+
 router
   .route('/')
   .get(controllers.articles.getArticles)
