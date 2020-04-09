@@ -8,7 +8,7 @@ import ServiceError from './helpers/ServiceError';
  * @returns {object} Found article.
  * @throws {Error} Any error that prevents the service from executing.
  */
-const getArticle = async slug => {
+const getArticle = async (slug) => {
   const article = await Article.findOne({ slug }).populate('author');
 
   if (!article) throw new ServiceError('Article does not exist.', 404);
@@ -22,7 +22,7 @@ const getArticle = async slug => {
  * @returns {object} Returns pagination and results.
  * @throws {Error} Any error that prevents the service from executing.
  */
-const getArticles = async req => {
+const getArticles = async (req) => {
   return advancedResults(req, Article, 'author');
 };
 
@@ -90,5 +90,5 @@ export default {
   getArticles,
   createArticle,
   updateArticle,
-  deleteArticle
+  deleteArticle,
 };

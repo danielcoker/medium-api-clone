@@ -44,4 +44,24 @@ const addComment = catchControllerError('Add Comment', async (req, res) => {
   });
 });
 
-export default { getComments, addComment };
+/**
+ * @desc Delete comment to an article.
+ * @access Private
+ */
+const deleteComment = catchControllerError(
+  'Delete Comment',
+  async (req, res) => {
+    const slug = req.params.slug;
+    const id = req.params.id;
+
+    const comment = await CommentService.deleteComment(slug, id, req.user);
+
+    res.status(204).json({
+      success: true,
+      message: 'Comment deleted successfully.',
+      data: {},
+    });
+  }
+);
+
+export default { getComments, addComment, deleteComment };

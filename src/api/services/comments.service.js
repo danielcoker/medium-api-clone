@@ -45,4 +45,31 @@ const addComment = async (slug, data, user) => {
   return comment;
 };
 
-export default { getComments, addComment };
+/**
+ * @desc Deletes comment to article.
+ * @param {string} slug from controller.
+ * @param {user} user Loggedin user.
+ * @returns {boolean} true
+ * @throws {Error} Any error that prevents the service from exectuting.
+ */
+const deleteComment = async (slug, id, user) => {
+  const article = await Article.findOne({ slug });
+
+  if (!article) throw new ServiceError('Article does not exist.', 404);
+
+  const comment = await Comment.findById(id);
+
+  if (!comment) throw new ServiceError('Comment does not exist.', 404);
+
+  if (!comment.author.equals(user.id))
+    throw new ServiceError(
+      'User is not authorized to delete this comment.',
+      401
+    );
+
+  await Comment.findByIdAndDelete(id);
+
+  return true;
+};
+
+export default { getComments, addComment, deleteComment };

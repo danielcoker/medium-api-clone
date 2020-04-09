@@ -10,6 +10,10 @@ router
   .post(protect, controllers.comments.addComment);
 
 router
+  .route('/:slug/comments/:id')
+  .delete(protect, controllers.comments.deleteComment);
+
+router
   .route('/')
   .get(controllers.articles.getArticles)
   .post(protect, controllers.articles.createArticle);
